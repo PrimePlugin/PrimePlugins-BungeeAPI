@@ -1,5 +1,6 @@
 package de.primeapi.primeplugins.bungeeapi;
 
+import de.primeapi.primeplugins.bungeeapi.commands.PrimeCoreCommand;
 import de.primeapi.primeplugins.bungeeapi.commands.coins.CoinsCommand;
 import de.primeapi.primeplugins.bungeeapi.configs.AccessDataConfig;
 import de.primeapi.primeplugins.bungeeapi.configs.CoreConfig;
@@ -56,7 +57,7 @@ public class PrimeCore extends Plugin {
     }
 
     private void registerCommands() {
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CoinsCommand("coins"));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new PrimeCoreCommand("primecorebungee"));
     }
 
 
