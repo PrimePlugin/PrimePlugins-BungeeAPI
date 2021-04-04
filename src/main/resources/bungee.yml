@@ -1,0 +1,4 @@
+name: PrimeCore
+version: 0.0.0
+main: de.primeapi.primeplugins.bungeeapi.PrimeCore
+author: PrimeAPI
