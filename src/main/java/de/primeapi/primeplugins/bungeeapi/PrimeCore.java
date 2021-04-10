@@ -73,6 +73,14 @@ public class PrimeCore extends Plugin {
                 connection = DriverManager.getConnection("jdbc:mysql://" + AccessDataConfig.getInstance().getString("mysql.host") + "/" + AccessDataConfig.getInstance().getString("mysql.database") + "?autoReconnect=true", AccessDataConfig.getInstance().getString("mysql.username"), AccessDataConfig.getInstance().getString("mysql.password"));
                 getLogger().log(Level.INFO, "MySQL-Connection established");
                 connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_players` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE,`uuid` VARCHAR(36) NOT NULL UNIQUE,`name` VARCHAR(16) NOT NULL UNIQUE,`realname` VARCHAR(16) NOT NULL UNIQUE,`coins` INT NOT NULL,PRIMARY KEY (`id`));").execute();
+                connection.prepareStatement(
+                        "CREATE TABLE IF NOT EXISTS `core_settings` (" +
+                                "`id` INT NOT NULL AUTO_INCREMENT UNIQUE," +
+                                "`uuid` VARCHAR(36) NOT NULL," +
+                                "`setting` VARCHAR(36) NOT NULL," +
+                                "`value` INT," +
+                                "PRIMARY KEY (`id`));"
+                ).execute();
             } catch (SQLException throwables) {
                 getLogger().log(Level.WARNING, "MySQL-Connection failed: " + throwables.getMessage());
             }
