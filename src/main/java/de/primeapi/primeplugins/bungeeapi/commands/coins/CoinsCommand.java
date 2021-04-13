@@ -22,7 +22,7 @@ public class CoinsCommand extends Command {
         PrimePlayer p = new PrimePlayer((ProxiedPlayer) commandSender);
 
         if(args.length == 0){
-            p.sendMessage(CoreMessage.COINS_AMOUNT.replace("coins", p.getCoins()));
+            p.retrieveCoins().submit(integer -> p.sendMessage(CoreMessage.COINS_AMOUNT.replace("coins", integer)));
             return;
         }
 

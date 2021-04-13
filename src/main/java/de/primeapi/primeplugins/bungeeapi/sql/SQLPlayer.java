@@ -11,36 +11,40 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @AllArgsConstructor
 public class SQLPlayer {
     public Integer id;
     public UUID uuid;
 
-    public static SQLPlayer create(UUID uuid, String name){
-        Integer id = null;
-        try {
-            PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement("INSERT INTO core_players values (id, ?,?,?,?,?)");
-            st.setString(1, uuid.toString());
-            st.setString(2, name.toLowerCase());
-            st.setString(3, name);
-            st.setInt(4, CoreConfig.getInstance().getInt("settings.coins.startAmount"));
-            st.setInt(5,0);
-            st.executeUpdate();
-            ResultSet rs = st.getGeneratedKeys();
-            if(rs.next()){
-                id = rs.getInt(1);
+    public static DatabaseTask<SQLPlayer> create(UUID uuid, String name){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
+            Integer id = null;
+            try {
+                PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement("INSERT INTO core_players values (id, ?,?,?,?,?)");
+                st.setString(1, uuid.toString());
+                st.setString(2, name.toLowerCase());
+                st.setString(3, name);
+                st.setInt(4, CoreConfig.getInstance().getInt("settings.coins.startAmount"));
+                st.setInt(5,0);
+                st.executeUpdate();
+                ResultSet rs = st.getGeneratedKeys();
+                if(rs.next()){
+                    id = rs.getInt(1);
+                }
+                rs.close();
+                st.close();
+            } catch (SQLException throwables) {
+                return new SQLPlayer(uuid);
             }
-            rs.close();
-            st.close();
-        } catch (SQLException throwables) {
-            return new SQLPlayer(uuid);
-        }
-        assert (id != null);
-        return new SQLPlayer(id);
+            assert (id != null);
+            return new SQLPlayer(id);
+        }));
     }
 
-    public static SQLPlayer loadPlayerByName(String name){
+    public static DatabaseTask<SQLPlayer> loadPlayerByName(String name){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
         Integer id = null;
         try {
             PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement("SELECT id FROM core_players WHERE name = ?;");
@@ -59,6 +63,7 @@ public class SQLPlayer {
             return null;
         }
         return new SQLPlayer(id);
+        }));
     }
 
 
@@ -91,24 +96,27 @@ public class SQLPlayer {
         }
     }
 
-    public String getName(){
-        load();
-        String s = null;
-        try {
-            PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement("SELECT name FROM core_players WHERE id = ?");
-            st.setInt(1, id);
-            ResultSet rs = st.executeQuery();
-            if(rs.next()){
-                s = rs.getString("name");
+    public DatabaseTask<String> retrieveName(){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
+            load();
+            String s = null;
+            try {
+                PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement("SELECT name FROM core_players WHERE id = ?");
+                st.setInt(1, id);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    s = rs.getString("name");
+                }
+                rs.close();
+                st.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
-            rs.close();
-            st.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return s;
+            return s;
+        }));
     }
-    public UUID getUniqueId(){
+    public DatabaseTask<UUID> retrieveUniqueId(){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
         if(uuid != null){
             return uuid;
         }else {
@@ -129,8 +137,10 @@ public class SQLPlayer {
             assert s != null;
             return UUID.fromString(s);
         }
+        }));
     }
-    public String getRealName(){
+    public DatabaseTask<String> retrieveRealName(){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
         load();
         String s = null;
         try {
@@ -146,8 +156,10 @@ public class SQLPlayer {
             throwables.printStackTrace();
         }
         return s;
+        }));
     }
-    public int getCoins(){
+    public DatabaseTask<Integer> retrieveCoins(){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
         load();
         int i  = 0;
         try {
@@ -163,6 +175,7 @@ public class SQLPlayer {
             throwables.printStackTrace();
         }
         return i;
+        }));
     }
 
     public void setCoins(int i){
@@ -193,7 +206,8 @@ public class SQLPlayer {
         });
     }
 
-    public int retrieveOnMins(){
+    public DatabaseTask<Integer> retrieveOnMins(){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
         load();
         int i  = 0;
         try {
@@ -209,6 +223,7 @@ public class SQLPlayer {
             throwables.printStackTrace();
         }
         return i;
+        }));
     }
 
     public void setOnMins(int i){
@@ -226,21 +241,26 @@ public class SQLPlayer {
     }
 
     public void addOnMins(int i){
-        setOnMins(retrieveOnMins() + i);
+        retrieveOnMins().submit(integer -> {
+            setOnMins(integer + i);
+        });
     }
 
     public void addCoins(int i){
-        setCoins(getCoins() + i);
+        retrieveCoins().submit(integer -> {
+            setCoins(integer + i);
+        });
     }
 
-    public Integer retrieveSetting(PlayerSetting setting){
+    public DatabaseTask<Integer> retrieveSetting(PlayerSetting setting){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
         load();
         Integer i = null;
         try {
             PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement(
                     "SELECT * FROM core_settings WHERE uuid = ? AND setting = ?"
             );
-            st.setString(1, getUniqueId().toString());
+            st.setString(1, retrieveUniqueId().toString());
             st.setString(2, setting.toString());
             ResultSet rs = st.executeQuery();
             if(rs.next()){
@@ -252,15 +272,18 @@ public class SQLPlayer {
             throwables.printStackTrace();
         }
         return i;
+        }));
     }
 
-    public int retrieveSettingSave(PlayerSetting setting){
-        Integer i = retrieveSetting(setting);
-        if(Objects.isNull(i)){
-            return setting.getStandartValue();
-        }else {
-            return i;
-        }
+    public DatabaseTask<Integer> retrieveSettingSave(PlayerSetting setting){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
+            Integer i = retrieveSetting(setting).complete();
+            if (Objects.isNull(i)) {
+                return setting.getStandartValue();
+            } else {
+                return i;
+            }
+        }));
     }
 
     public void setSetting(PlayerSetting setting, int value){
@@ -272,7 +295,7 @@ public class SQLPlayer {
                     PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement(
                             "INSERT INTO core_settings value (id, ?,?,?)"
                     );
-                    st.setString(1, getUniqueId().toString());
+                    st.setString(1, retrieveUniqueId().toString());
                     st.setString(2, setting.toString());
                     st.setInt(3, value);
                     st.execute();
@@ -285,7 +308,7 @@ public class SQLPlayer {
                             "UPDATE core_settings SET value = ? WHERE uuid = ? AND setting = ?"
                     );
                     st.setInt(1, value);
-                    st.setString(2, getUniqueId().toString());
+                    st.setString(2, retrieveUniqueId().toString());
                     st.setString(3, setting.toString());
                     st.execute();
                 } catch (SQLException throwables) {

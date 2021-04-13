@@ -1,5 +1,6 @@
 package de.primeapi.primeplugins.bungeeapi;
 
+import com.github.davidmoten.rx.jdbc.Database;
 import de.primeapi.primeplugins.bungeeapi.commands.PrimeCoreCommand;
 import de.primeapi.primeplugins.bungeeapi.commands.coins.CoinsCommand;
 import de.primeapi.primeplugins.bungeeapi.configs.AccessDataConfig;
@@ -31,6 +32,7 @@ public class PrimeCore extends Plugin {
     ThreadPoolExecutor threadPoolExecutor;
     ConfigManager configManager;
     CommandsManager commandsManager;
+    Database database;
 
 
     @Override
@@ -81,6 +83,8 @@ public class PrimeCore extends Plugin {
                                 "`value` INT," +
                                 "PRIMARY KEY (`id`));"
                 ).execute();
+                database = Database.from(connection).asynchronous();
+                getLogger().log(Level.INFO, "Asynchronous MySQL-Connection established");
             } catch (SQLException throwables) {
                 getLogger().log(Level.WARNING, "MySQL-Connection failed: " + throwables.getMessage());
             }
