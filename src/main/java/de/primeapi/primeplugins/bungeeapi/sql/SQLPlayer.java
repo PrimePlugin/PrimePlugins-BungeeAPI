@@ -260,7 +260,7 @@ public class SQLPlayer {
             PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement(
                     "SELECT * FROM core_settings WHERE uuid = ? AND setting = ?"
             );
-            st.setString(1, retrieveUniqueId().toString());
+            st.setString(1, retrieveUniqueId().complete().toString());
             st.setString(2, setting.toString());
             ResultSet rs = st.executeQuery();
             if(rs.next()){
@@ -295,7 +295,7 @@ public class SQLPlayer {
                     PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement(
                             "INSERT INTO core_settings value (id, ?,?,?)"
                     );
-                    st.setString(1, retrieveUniqueId().toString());
+                    st.setString(1, retrieveUniqueId().complete().toString());
                     st.setString(2, setting.toString());
                     st.setInt(3, value);
                     st.execute();
@@ -308,7 +308,7 @@ public class SQLPlayer {
                             "UPDATE core_settings SET value = ? WHERE uuid = ? AND setting = ?"
                     );
                     st.setInt(1, value);
-                    st.setString(2, retrieveUniqueId().toString());
+                    st.setString(2, retrieveUniqueId().complete().toString());
                     st.setString(3, setting.toString());
                     st.execute();
                 } catch (SQLException throwables) {
