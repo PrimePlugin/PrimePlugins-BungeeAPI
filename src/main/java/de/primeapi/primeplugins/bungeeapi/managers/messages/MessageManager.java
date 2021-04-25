@@ -16,11 +16,15 @@ public class MessageManager {
     private Configuration cfg;
     private File file;
 
-    @SneakyThrows
     public MessageManager(){
         file = new File("plugins/primeplugin/core/messages.yml");
-        file.getParentFile().mkdirs();
-        if(!file.exists()) file.createNewFile();
+        if(!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         reload();
     }
 

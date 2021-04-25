@@ -8,6 +8,7 @@ import de.primeapi.primeplugins.bungeeapi.configs.CoreConfig;
 import de.primeapi.primeplugins.bungeeapi.listeners.PostLoginListener;
 import de.primeapi.primeplugins.bungeeapi.managers.commands.CommandsManager;
 import de.primeapi.primeplugins.bungeeapi.managers.config.ConfigManager;
+import de.primeapi.primeplugins.bungeeapi.managers.messages.MessageManager;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -51,6 +52,7 @@ public class PrimeCore extends Plugin {
 
         registerSQL();
         commandsManager = new CommandsManager();
+        new MessageManager();
         registerListeners();
     }
 
