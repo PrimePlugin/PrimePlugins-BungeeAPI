@@ -6,6 +6,7 @@ import de.primeapi.primeplugins.bungeeapi.commands.coins.CoinsCommand;
 import de.primeapi.primeplugins.bungeeapi.configs.AccessDataConfig;
 import de.primeapi.primeplugins.bungeeapi.configs.CoreConfig;
 import de.primeapi.primeplugins.bungeeapi.listeners.PostLoginListener;
+import de.primeapi.primeplugins.bungeeapi.managers.OnMinsCounter;
 import de.primeapi.primeplugins.bungeeapi.managers.commands.CommandsManager;
 import de.primeapi.primeplugins.bungeeapi.managers.config.ConfigManager;
 import de.primeapi.primeplugins.bungeeapi.managers.messages.MessageManager;
@@ -14,11 +15,13 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
+import java.net.ProxySelector;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 @Getter
@@ -54,6 +57,7 @@ public class PrimeCore extends Plugin {
         commandsManager = new CommandsManager();
         new MessageManager();
         registerListeners();
+        ProxyServer.getInstance().getScheduler().schedule(this, new OnMinsCounter(), 1, 1, TimeUnit.MINUTES);
     }
 
     private void registerListeners() {
