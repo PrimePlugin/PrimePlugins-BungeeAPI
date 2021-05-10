@@ -9,15 +9,20 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Getter @AllArgsConstructor
 public class DatabaseTask<T> {
 
     private CompletableFuture<T> future;
 
+    /**
+     * Runs the consumer async as soon as the Database returns a value
+     * @param consumer The consumer which should be run
+     */
     public void submit(Consumer<T> consumer){
         future.handle((unused, throwable) -> {
-            if(throwable != null) {
+            if (throwable != null) {
                 throwable.printStackTrace();
                 return null;
             }
@@ -26,8 +31,22 @@ public class DatabaseTask<T> {
     }
 
 
-
+    /**
+     * Used to handle the SQL request synchronised<br>
+     * Use this only if needed! This slows down the hole runtime!
+     * @return The Object which is returned by the Database
+     */
     public T complete(){
         return future.join();
+    }
+
+
+    public <U> DatabaseTask<U> map(Function<? super T,? extends U> fn){
+        return new DatabaseTask<>(future.thenApply(fn));
+    }
+
+    @Override
+    public String toString() {
+        return complete().toString();
     }
 }
