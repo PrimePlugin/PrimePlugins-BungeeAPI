@@ -5,6 +5,7 @@ import de.primeapi.primeplugins.bungeeapi.commands.PrimeCoreCommand;
 import de.primeapi.primeplugins.bungeeapi.commands.coins.CoinsCommand;
 import de.primeapi.primeplugins.bungeeapi.configs.AccessDataConfig;
 import de.primeapi.primeplugins.bungeeapi.configs.CoreConfig;
+import de.primeapi.primeplugins.bungeeapi.listeners.PluginMessagingListener;
 import de.primeapi.primeplugins.bungeeapi.listeners.PostLoginListener;
 import de.primeapi.primeplugins.bungeeapi.managers.OnMinsCounter;
 import de.primeapi.primeplugins.bungeeapi.managers.commands.CommandsManager;
@@ -57,11 +58,14 @@ public class PrimeCore extends Plugin {
         commandsManager = new CommandsManager();
         new MessageManager();
         registerListeners();
+        registerCommands();
         ProxyServer.getInstance().getScheduler().schedule(this, new OnMinsCounter(), 1, 1, TimeUnit.MINUTES);
+        getProxy().registerChannel("primemessaging");
     }
 
     private void registerListeners() {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PostLoginListener());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new PluginMessagingListener());
     }
 
     private void registerCommands() {
