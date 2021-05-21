@@ -11,6 +11,9 @@ import de.primeapi.primeplugins.bungeeapi.managers.OnMinsCounter;
 import de.primeapi.primeplugins.bungeeapi.managers.commands.CommandsManager;
 import de.primeapi.primeplugins.bungeeapi.managers.config.ConfigManager;
 import de.primeapi.primeplugins.bungeeapi.managers.messages.MessageManager;
+import de.primeapi.primeplugins.bungeeapi.websocket.SocketProvider;
+import de.primeapi.primeplugins.bungeeapi.websocket.commands.KickWebsocketCommand;
+import de.primeapi.primeplugins.bungeeapi.websocket.commands.SudoWebsocketCommand;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -38,6 +41,7 @@ public class PrimeCore extends Plugin {
     ConfigManager configManager;
     CommandsManager commandsManager;
     Database database;
+    SocketProvider socketProvider;
 
 
     @Override
@@ -61,6 +65,9 @@ public class PrimeCore extends Plugin {
         registerCommands();
         ProxyServer.getInstance().getScheduler().schedule(this, new OnMinsCounter(), 1, 1, TimeUnit.MINUTES);
         getProxy().registerChannel("primemessaging");
+        socketProvider = new SocketProvider();
+        socketProvider.registerCommand(new SudoWebsocketCommand());
+        socketProvider.registerCommand(new KickWebsocketCommand());
     }
 
     private void registerListeners() {
@@ -93,6 +100,8 @@ public class PrimeCore extends Plugin {
                                 "`value` INT," +
                                 "PRIMARY KEY (`id`));"
                 ).execute();
+                connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_web_keys` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE, `player` VARCHAR(36) NOT NULL UNIQUE, `key` VARCHAR(8) NOT NULL, `rank` INT NOT NULL, primary key (`id`))").execute();
+                connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_web_accounts` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE, `player` VARCHAR(36) NOT NULL UNIQUE, `password` VARCHAR(255) NOT NULL, `rank` INT NOT NULL, primary key (`id`))").execute();
                 database = Database.from(connection).asynchronous();
                 getLogger().log(Level.INFO, "Asynchronous MySQL-Connection established");
             } catch (SQLException throwables) {
