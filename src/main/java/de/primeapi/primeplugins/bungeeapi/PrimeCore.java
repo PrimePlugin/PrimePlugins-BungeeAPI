@@ -102,6 +102,7 @@ public class PrimeCore extends Plugin {
                 ).execute();
                 connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_web_keys` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE, `player` VARCHAR(36) NOT NULL UNIQUE, `key` VARCHAR(8) NOT NULL, `rank` INT NOT NULL, primary key (`id`))").execute();
                 connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_web_accounts` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE, `player` VARCHAR(36) NOT NULL UNIQUE, `password` VARCHAR(255) NOT NULL, `rank` INT NOT NULL, primary key (`id`))").execute();
+                connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_web_unban` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE, `player` VARCHAR(36) NOT NULL UNIQUE, `type` VARCHAR(64) NOT NULL, `reason` VARCHAR(64) NOT NULL, `lenght` VARCHAR(64) NOT NULL, `message` VARCHAR(1000) NOT NULL, primary key (`id`))").execute();
                 database = Database.from(connection).asynchronous();
                 getLogger().log(Level.INFO, "Asynchronous MySQL-Connection established");
             } catch (SQLException throwables) {
