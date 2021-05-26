@@ -11,6 +11,7 @@ import de.primeapi.primeplugins.bungeeapi.managers.OnMinsCounter;
 import de.primeapi.primeplugins.bungeeapi.managers.commands.CommandsManager;
 import de.primeapi.primeplugins.bungeeapi.managers.config.ConfigManager;
 import de.primeapi.primeplugins.bungeeapi.managers.messages.MessageManager;
+import de.primeapi.primeplugins.bungeeapi.managers.rest.RestManager;
 import de.primeapi.primeplugins.bungeeapi.websocket.SocketProvider;
 import de.primeapi.primeplugins.bungeeapi.websocket.commands.KickWebsocketCommand;
 import de.primeapi.primeplugins.bungeeapi.websocket.commands.SudoWebsocketCommand;
@@ -42,6 +43,7 @@ public class PrimeCore extends Plugin {
     CommandsManager commandsManager;
     Database database;
     SocketProvider socketProvider;
+    RestManager restManager;
 
 
     @Override
@@ -68,6 +70,7 @@ public class PrimeCore extends Plugin {
         socketProvider = new SocketProvider();
         socketProvider.registerCommand(new SudoWebsocketCommand());
         socketProvider.registerCommand(new KickWebsocketCommand());
+        restManager = new RestManager();
     }
 
     private void registerListeners() {
