@@ -28,17 +28,14 @@ public class PrimePlayer extends SQLPlayer {
     }
 
 
-    @Override
     public UUID getUniqueId(){
         return thePlayer().getUniqueId();
     }
 
-    @Override
     public String getName() {
         return thePlayer().getName();
     }
 
-    @Override
     public String getRealName() {
         return thePlayer().getName();
     }

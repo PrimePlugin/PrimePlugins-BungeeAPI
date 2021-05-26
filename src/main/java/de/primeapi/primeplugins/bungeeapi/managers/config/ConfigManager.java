@@ -14,7 +14,7 @@ public class ConfigManager {
     public ConfigManager(){
         registeredConfigs = new ArrayList<>();
         {
-            File ord = new File("plugins/primeplugins");
+            File ord = new File("plugins/primeplugin");
             if(!ord.exists()) ord.mkdir();
         }
     }

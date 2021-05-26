@@ -22,6 +22,11 @@ public enum CoreMessage {
     COINS_SEE_USAGE("§7 Verwendung: §e/coins see <Spieler>", true),
     COINS_SEE_SUCCESS("§7 Der Spieler §e%player% §7hat §6%coins% Coins§7!", true),
 
+    WEBACCOUNT_ERROR("§c Es ist ein Fehler aufgetreten!", true),
+    WEBACCOUNT_SUCCESS("§7 Dein Key wurde §aerfolgreich §7erstellt: §8'§e%key%§8' <br>%prefix%§7 Klicke §ehier §7um zur Registration zu gelangen!", true),
+
+    KICK_WEB("§8» §b§lWebinterface §8«\n\n§c§lDu wurdest gekickt!\n§7Gekickt von %name%", false),
+
     PLACEHOLDER("DO NOT TOUCH", false);
 
     String path;
