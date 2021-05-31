@@ -31,7 +31,7 @@ public class PluginMessagingListener implements Listener {
     public void onPluginMessage(PluginMessageEvent e){
         try {
             String tag = e.getTag();
-            if (!tag.equalsIgnoreCase("primemessaging")) {
+            if (!tag.equalsIgnoreCase("prime:primemessaging")) {
                 return;
             }
             ByteArrayDataInput in = ByteStreams.newDataInput(e.getData());
