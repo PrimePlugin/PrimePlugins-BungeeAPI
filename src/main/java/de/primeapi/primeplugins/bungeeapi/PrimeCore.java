@@ -71,6 +71,7 @@ public class PrimeCore extends Plugin {
         socketProvider.registerCommand(new SudoWebsocketCommand());
         socketProvider.registerCommand(new KickWebsocketCommand());
         restManager = new RestManager();
+        restManager.registerPlugin(new RestCore(this));
     }
 
     private void registerListeners() {
@@ -80,6 +81,7 @@ public class PrimeCore extends Plugin {
 
     private void registerCommands() {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PrimeCoreCommand("primecorebungee"));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new PrimeCoreCommand("bungeeapi"));
     }
 
 
