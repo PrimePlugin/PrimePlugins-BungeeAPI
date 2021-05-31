@@ -92,7 +92,6 @@
             <scope>compile</scope>
         </dependency>
 
-
         <!-- TeamSpeak API -->
         <dependency>
             <groupId>com.github.theholywaffle</groupId>
