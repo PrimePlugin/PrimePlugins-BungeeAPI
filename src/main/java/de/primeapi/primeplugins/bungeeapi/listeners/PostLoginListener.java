@@ -45,7 +45,7 @@ public class PostLoginListener implements Listener {
             PrimeCore.getInstance().getRestManager().setChecked(true);
         }
 
-        if(update){
+        if(update && p.hasPermission("primeplugins.update")){
             e.getPlayer().sendMessage(msg);
         }
     }

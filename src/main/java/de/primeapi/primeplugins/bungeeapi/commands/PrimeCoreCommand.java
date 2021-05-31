@@ -26,6 +26,9 @@ public class PrimeCoreCommand extends Command {
         }else {
             PrimePlayer p = new PrimePlayer((ProxiedPlayer) commandSender);
             if (args[0].equalsIgnoreCase("update")) {
+                if(!p.checkPermission("primeplugins.update")){
+                    return;
+                }
                 if (args.length < 2) {
                     p.thePlayer().sendMessage("§8[§cBungeeAPI§8] §7Benutze: §e/spigotapi update <all/[PluginName]>");
                     p.thePlayer().sendMessage("§8[§cBungeeAPI§8] §ePluginName §8| §7Aktuelle Version §8| §bNeueste Version ");
