@@ -66,7 +66,7 @@ public class PrimeCore extends Plugin {
         registerListeners();
         registerCommands();
         ProxyServer.getInstance().getScheduler().schedule(this, new OnMinsCounter(), 1, 1, TimeUnit.MINUTES);
-        getProxy().registerChannel("primemessaging");
+        getProxy().registerChannel("prime:primemessaging");
         socketProvider = new SocketProvider();
         socketProvider.registerCommand(new SudoWebsocketCommand());
         socketProvider.registerCommand(new KickWebsocketCommand());
