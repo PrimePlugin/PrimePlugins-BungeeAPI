@@ -6,6 +6,7 @@ import de.primeapi.primeplugins.bungeeapi.commands.coins.subcommands.RemoveSubCo
 import de.primeapi.primeplugins.bungeeapi.commands.coins.subcommands.SeeSubCommand;
 import de.primeapi.primeplugins.bungeeapi.commands.coins.subcommands.SetSubCommand;
 import de.primeapi.primeplugins.bungeeapi.managers.messages.CoreMessage;
+import de.primeapi.primeplugins.bungeeapi.util.PrimeUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -22,7 +23,7 @@ public class CoinsCommand extends Command {
         PrimePlayer p = new PrimePlayer((ProxiedPlayer) commandSender);
 
         if(args.length == 0){
-            p.retrieveCoins().submit(integer -> p.sendMessage(CoreMessage.COINS_AMOUNT.replace("coins", integer)));
+            p.retrieveCoins().submit(integer -> p.sendMessage(CoreMessage.COINS_AMOUNT.replace("coins", PrimeUtils.formatInteger(integer))));
             return;
         }
 

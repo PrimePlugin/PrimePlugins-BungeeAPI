@@ -5,6 +5,7 @@ import de.primeapi.primeplugins.bungeeapi.api.PrimePlayer;
 import de.primeapi.primeplugins.bungeeapi.api.SubCommand;
 import de.primeapi.primeplugins.bungeeapi.managers.messages.CoreMessage;
 import de.primeapi.primeplugins.bungeeapi.sql.SQLPlayer;
+import de.primeapi.primeplugins.bungeeapi.util.PrimeUtils;
 
 public class SetSubCommand extends SubCommand {
     public SetSubCommand() {
@@ -33,7 +34,7 @@ public class SetSubCommand extends SubCommand {
                 return;
             }
             target.setCoins(amount);
-            p.sendMessage(CoreMessage.COINS_SET_SUCCESS.replace("player", target.retrieveRealName().complete()).replace("coins", amount));
+            p.sendMessage(CoreMessage.COINS_SET_SUCCESS.replace("player", target.retrieveRealName().complete()).replace("coins", PrimeUtils.formatInteger(amount)));
         });
         return true;
     }
