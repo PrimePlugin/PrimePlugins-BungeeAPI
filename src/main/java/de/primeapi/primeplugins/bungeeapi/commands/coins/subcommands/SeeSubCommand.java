@@ -4,6 +4,7 @@ import de.primeapi.primeplugins.bungeeapi.api.PrimePlayer;
 import de.primeapi.primeplugins.bungeeapi.api.SubCommand;
 import de.primeapi.primeplugins.bungeeapi.managers.messages.CoreMessage;
 import de.primeapi.primeplugins.bungeeapi.sql.SQLPlayer;
+import de.primeapi.primeplugins.bungeeapi.util.PrimeUtils;
 
 
 public class SeeSubCommand extends SubCommand {
@@ -25,7 +26,7 @@ public class SeeSubCommand extends SubCommand {
                 p.sendMessage(CoreMessage.COINS_PLAYERNOTFOUND);
                 return;
             }
-            p.sendMessage(CoreMessage.COINS_SEE_SUCCESS.replace("player", target.retrieveRealName().complete()).replace("coins", target.retrieveCoins().complete()));
+            p.sendMessage(CoreMessage.COINS_SEE_SUCCESS.replace("player", target.retrieveRealName().complete()).replace("coins", PrimeUtils.formatInteger(target.retrieveCoins().complete())));
         });
         return true;
     }
