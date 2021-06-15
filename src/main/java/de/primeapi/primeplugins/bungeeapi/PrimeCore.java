@@ -37,6 +37,8 @@ public class PrimeCore extends Plugin {
         return instance;
     }
 
+    private static boolean loaded = false;
+
     Connection connection;
     ThreadPoolExecutor threadPoolExecutor;
     ConfigManager configManager;
@@ -48,6 +50,11 @@ public class PrimeCore extends Plugin {
 
     @Override
     public void onEnable() {
+        if(loaded){
+            getLogger().warning("Abort loading, already loaded");
+            return;
+        }
+        loaded = true;
         instance = this;
         getLogger().log(Level.INFO, "---------------[ PrimeAPI | core ]---------------");
         getLogger().log(Level.INFO, "Plugin: PrimeCore");
@@ -67,9 +74,15 @@ public class PrimeCore extends Plugin {
         registerCommands();
         ProxyServer.getInstance().getScheduler().schedule(this, new OnMinsCounter(), 1, 1, TimeUnit.MINUTES);
         getProxy().registerChannel("prime:primemessaging");
-        socketProvider = new SocketProvider();
-        socketProvider.registerCommand(new SudoWebsocketCommand());
-        socketProvider.registerCommand(new KickWebsocketCommand());
+        try {
+            getLogger().info("Starting WebSocket....");
+            socketProvider = new SocketProvider();
+            socketProvider.registerCommand(new SudoWebsocketCommand());
+            socketProvider.registerCommand(new KickWebsocketCommand());
+            getLogger().info("Websocket started!");
+        }catch (Exception ex){
+            getLogger().warning("Error starting Websocket: " + ex.getMessage());
+        }
         restManager = new RestManager();
         restManager.registerPlugin(new RestCore(this));
     }
