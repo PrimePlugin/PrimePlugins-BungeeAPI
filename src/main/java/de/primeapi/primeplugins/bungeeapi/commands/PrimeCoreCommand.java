@@ -55,6 +55,7 @@ public class PrimeCoreCommand extends Command {
                             p.thePlayer().sendMessage("§8[§cBungeeAPI§8] §e" + plugin.getName() + "§7 konnte §cnicht §7herruntergeladen werden: §c" + e.getMessage());
                         }
                     }
+                    p.thePlayer().sendMessage("§8[§cSpigotAPI§8] §7Das Updaten aller Plugins wurde §aabgeschlossen!");
 
                     return;
                 }else {
