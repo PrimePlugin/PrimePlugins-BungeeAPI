@@ -6,7 +6,7 @@
 
     <groupId>de.primeapi.primeplugins</groupId>
     <artifactId>BungeeAPI</artifactId>
-    <version>1.0.2_${v}</version>
+    <version>1.0.3_${v}</version>
     <build>
         <plugins>
             <plugin>
