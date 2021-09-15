@@ -1,6 +1,7 @@
 package de.primeapi.primeplugins.bungeeapi;
 
 import com.github.davidmoten.rx.jdbc.Database;
+import de.primeapi.primeplugins.bungeeapi.api.BungeeAPI;
 import de.primeapi.primeplugins.bungeeapi.commands.PrimeCoreCommand;
 import de.primeapi.primeplugins.bungeeapi.commands.coins.CoinsCommand;
 import de.primeapi.primeplugins.bungeeapi.configs.AccessDataConfig;
@@ -85,6 +86,8 @@ public class PrimeCore extends Plugin {
         }
         restManager = new RestManager();
         restManager.registerPlugin(new RestCore(this));
+
+        new BungeeAPI();
     }
 
     private void registerListeners() {
