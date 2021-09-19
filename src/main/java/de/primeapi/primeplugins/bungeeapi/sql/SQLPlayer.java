@@ -2,6 +2,7 @@ package de.primeapi.primeplugins.bungeeapi.sql;
 
 import de.primeapi.primeplugins.bungeeapi.PrimeCore;
 import de.primeapi.primeplugins.bungeeapi.configs.CoreConfig;
+import de.primeapi.primeplugins.bungeeapi.enums.PlayerData;
 import de.primeapi.primeplugins.bungeeapi.enums.PlayerSetting;
 import lombok.AllArgsConstructor;
 
@@ -78,11 +79,12 @@ public class SQLPlayer {
     public void load() {
         if(Objects.isNull(id)){
             try {
-                PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement("SELECT id FROM core_players WHERE uuid=?");
+                PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement("SELECT id,uuid FROM core_players WHERE uuid=?");
                 st.setString(1, uuid.toString());
                 ResultSet rs = st.executeQuery();
                 if(rs.next()){
                     id = rs.getInt("id");
+                    uuid = UUID.fromString(rs.getString("uuid"));
                     rs.close();
                     st.close();
                 }else {
@@ -317,5 +319,68 @@ public class SQLPlayer {
             }
         });
     }
+
+    public DatabaseTask<String> retrieveData(PlayerData type){
+        return retrieveData(type.toString());
+    }
+    public DatabaseTask<String> retrieveData(String type){
+        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
+            load();
+            String s = null;
+            try {
+                PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement(
+                        "SELECT * FROM core_playerdata WHERE uuid = ? AND type = ?"
+                );
+                st.setString(1, retrieveUniqueId().complete().toString());
+                st.setString(2, type);
+                ResultSet rs = st.executeQuery();
+                if(rs.next()){
+                    s = rs.getString("value");
+                }
+                rs.close();
+                st.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            return s;
+        }));
+    }
+
+    public void setData(PlayerData type, String data){
+        setData(type.toString(), data);
+    }
+    public void setData(String type, String data){
+        load();
+
+
+        retrieveData(type).submit(s -> {
+            if(Objects.isNull(s)){
+                try {
+                    PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement(
+                            "INSERT INTO core_playerdata value (id, ?,?,?)"
+                    );
+                    st.setString(1, retrieveUniqueId().complete().toString());
+                    st.setString(2, type);
+                    st.setString(3, data);
+                    st.execute();
+                }catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                try {
+                    PreparedStatement st = PrimeCore.getInstance().getConnection().prepareStatement(
+                            "UPDATE core_playerdata SET value = ? WHERE uuid = ? AND type = ?"
+                    );
+                    st.setString(1, data);
+                    st.setString(2, retrieveUniqueId().complete().toString());
+                    st.setString(3, type);
+                    st.execute();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        });
+    }
+
 
 }

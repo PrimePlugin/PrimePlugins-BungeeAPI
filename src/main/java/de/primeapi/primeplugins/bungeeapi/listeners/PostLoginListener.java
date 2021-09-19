@@ -3,6 +3,7 @@ package de.primeapi.primeplugins.bungeeapi.listeners;
 import de.primeapi.primeplugins.bungeeapi.PrimeCore;
 import de.primeapi.primeplugins.bungeeapi.api.PrimePlayer;
 import de.primeapi.primeplugins.bungeeapi.api.RestPlugin;
+import de.primeapi.primeplugins.bungeeapi.enums.PlayerData;
 import de.primeapi.primeplugins.bungeeapi.sql.SQLPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -24,6 +25,15 @@ public class PostLoginListener implements Listener {
             });
         }
         PrimePlayer p = new PrimePlayer(e.getPlayer());
+
+        p.setData(PlayerData.LAST_LOGIN, String.valueOf(System.currentTimeMillis()));
+        p.setData(PlayerData.IP_ADDRESS, String.valueOf(e.getPlayer().getAddress().getAddress().getHostAddress()));
+
+        p.retrieveData(PlayerData.FIRST_LOGIN).submit(s -> {
+            if(s == null){
+                p.setData(PlayerData.FIRST_LOGIN, String.valueOf(System.currentTimeMillis()));
+            }
+        });
 
 
         if(!PrimeCore.getInstance().getRestManager().isChecked()){
