@@ -27,6 +27,14 @@ public enum CoreMessage {
 
     KICK_WEB("§8» §b§lWebinterface §8«\n\n§c§lDu wurdest gekickt!\n§7Gekickt von %name%", false),
 
+    PAY_USAGE("§eCoins §7●§7 Verwendung: §e/pay <Spieler> <Betrag>", false),
+    PAY_NOT_SELF("§eCoins §7●§c Du kannst dir selbst kein Geld senden!", false),
+    PAY_SUCCESSFULLY("§eCoins §7●§7 Du hast erfolgreich §e%c%$§7 an §e%p%§7 überwiesen!", false),
+    PAY_SUCCESSFULLY_RECEIVER("§eCoins §7●§7 Du hast §e%c%$§7 von §a%p% §7erhalten!", false),
+    PAY_NOT_ENOUGH("§eCoins §7●§c Du hast zu wenig Coins!", false),
+    PAY_NOT_ONLINE("§eCoins §7●§c Dieser Spieler wurde nicht gefunden!", false),
+    PAY_NOT_NUMBER("§eCoins §7●§c Bitte gebe eine Zahl als Betrag an!", false),
+
     PLACEHOLDER("DO NOT TOUCH", false);
 
     String path;
