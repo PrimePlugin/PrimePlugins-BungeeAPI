@@ -7,6 +7,15 @@ package de.primeapi.primeplugins.bungeeapi.util;
  */
 public class PrimeUtils {
 
+    public static boolean isNumber(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
+    }
+
     public static String formatInteger(Integer input){
         String number = input.toString();
         String s = "";
