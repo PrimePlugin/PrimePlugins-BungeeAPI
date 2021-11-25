@@ -5,7 +5,7 @@ import de.primeapi.primeplugins.bungeeapi.api.PrimePlayer;
 import de.primeapi.primeplugins.bungeeapi.api.RestPlugin;
 import de.primeapi.primeplugins.bungeeapi.managers.rest.PluginInfo;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
+import de.primeapi.primeplugins.bungeeapi.api.debugmessage.DebugMessage;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -20,11 +20,21 @@ public class PrimeCoreCommand extends Command {
     @Override
     public void execute(CommandSender commandSender, String[] args) {
         if(args.length == 0) {
-            commandSender.sendMessage("PrimeCore(Bungee) v" + PrimeCore.getInstance().getDescription().getVersion());
+            commandSender.sendMessage("PrimeCore(Bungee) v" + PrimeCore.getInstance().getDescription().getVersion() + "!");
             commandSender.sendMessage("Author: PrimeAPI (https://primeapi.de)");
             commandSender.sendMessage("Verwende: /bungeeapi update");
         }else {
             PrimePlayer p = new PrimePlayer((ProxiedPlayer) commandSender);
+            if(args[0].equalsIgnoreCase("debug")){
+                // /priemcore debug <secret>
+                if(args.length < 2){
+                    p.thePlayer().sendMessage("§7Verwende: §e/primecore debug <Secret>");
+                    return;
+                }
+                p.thePlayer().sendMessage("§7Sende Daten...");
+                DebugMessage.send(args[1], p.thePlayer());
+                return;
+            }
             if (args[0].equalsIgnoreCase("update")) {
                 if(!p.checkPermission("primeplugins.update")){
                     return;

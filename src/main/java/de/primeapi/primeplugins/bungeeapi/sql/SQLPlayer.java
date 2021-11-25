@@ -254,6 +254,12 @@ public class SQLPlayer {
         });
     }
 
+    public void removeCoins(int i){
+        retrieveCoins().submit(integer -> {
+            setCoins(integer - i);
+        });
+    }
+
     public DatabaseTask<Integer> retrieveSetting(PlayerSetting setting){
         return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
         load();

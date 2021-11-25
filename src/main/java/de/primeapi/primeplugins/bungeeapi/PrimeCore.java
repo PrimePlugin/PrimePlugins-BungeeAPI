@@ -2,8 +2,8 @@ package de.primeapi.primeplugins.bungeeapi;
 
 import com.github.davidmoten.rx.jdbc.Database;
 import de.primeapi.primeplugins.bungeeapi.api.BungeeAPI;
+import de.primeapi.primeplugins.bungeeapi.commands.PayCommand;
 import de.primeapi.primeplugins.bungeeapi.commands.PrimeCoreCommand;
-import de.primeapi.primeplugins.bungeeapi.commands.coins.CoinsCommand;
 import de.primeapi.primeplugins.bungeeapi.configs.AccessDataConfig;
 import de.primeapi.primeplugins.bungeeapi.configs.CoreConfig;
 import de.primeapi.primeplugins.bungeeapi.listeners.PluginMessagingListener;
@@ -21,7 +21,6 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
-import java.net.ProxySelector;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -98,6 +97,7 @@ public class PrimeCore extends Plugin {
     private void registerCommands() {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PrimeCoreCommand("primecorebungee"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PrimeCoreCommand("bungeeapi"));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new PayCommand("pay"));
     }
 
 
