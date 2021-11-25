@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class ConfigManager {
 
@@ -17,6 +18,10 @@ public class ConfigManager {
             File ord = new File("plugins/primeplugin");
             if(!ord.exists()) ord.mkdir();
         }
+    }
+
+    public List<File> getALLFiles(){
+        return registeredConfigs.stream().map(Config::getFile).collect(Collectors.toList());
     }
 
     public void register(Config config){
