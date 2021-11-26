@@ -23,5 +23,6 @@ public class CoreConfig extends Config {
         saveAddEntry("webinterface.link", "https://server.de/cp");
         saveAddEntry("webinterface.websocket.socketKey", new RandomString().nextString());
         saveAddEntry("webinterface.websocket.port", 8081);
+        saveAddEntry("coins.pay", true);
     }
 }
