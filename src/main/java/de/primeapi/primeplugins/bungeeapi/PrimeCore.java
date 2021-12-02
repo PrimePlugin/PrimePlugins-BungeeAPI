@@ -99,7 +99,9 @@ public class PrimeCore extends Plugin {
     private void registerCommands() {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PrimeCoreCommand("primecorebungee"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PrimeCoreCommand("bungeeapi"));
-        if(coins) ProxyServer.getInstance().getPluginManager().registerCommand(this, new PayCommand("pay"));
+        if(coins) {
+            ProxyServer.getInstance().getPluginManager().registerCommand(this, new PayCommand("pay"));
+        }
     }
 
 
