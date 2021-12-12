@@ -46,6 +46,7 @@ public class PrimeCore extends Plugin {
     Database database;
     SocketProvider socketProvider;
     RestManager restManager;
+    boolean coins;
 
 
     @Override
@@ -66,14 +67,15 @@ public class PrimeCore extends Plugin {
         threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         configManager = new ConfigManager();
         registerConfigs();
-
         registerSQL();
+        coins = CoreConfig.getInstance().getBoolean("coins.pay");
         commandsManager = new CommandsManager();
         new MessageManager();
         registerListeners();
         registerCommands();
         ProxyServer.getInstance().getScheduler().schedule(this, new OnMinsCounter(), 1, 1, TimeUnit.MINUTES);
         getProxy().registerChannel("prime:primemessaging");
+
         try {
             getLogger().info("Starting WebSocket....");
             socketProvider = new SocketProvider();
@@ -97,7 +99,9 @@ public class PrimeCore extends Plugin {
     private void registerCommands() {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PrimeCoreCommand("primecorebungee"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PrimeCoreCommand("bungeeapi"));
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new PayCommand("pay"));
+        if(coins) {
+            ProxyServer.getInstance().getPluginManager().registerCommand(this, new PayCommand("pay"));
+        }
     }
 
 
