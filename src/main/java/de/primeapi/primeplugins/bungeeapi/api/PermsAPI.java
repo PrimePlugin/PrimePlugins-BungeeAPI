@@ -28,6 +28,10 @@ public class PermsAPI {
         return instance;
     }
 
+    public boolean isOnline() {
+        return online;
+    }
+
     boolean online;
     public PermsAPI() {
         instance = this;
