@@ -86,7 +86,7 @@ public class DebugMessage {
             }
             files.addAll(PrimeCore.getInstance().getConfigManager().getALLFiles());
 
-            HttpResponse<String> fileResponse = Unirest.post("http://mc.primeapi.de:8083/debugs/" + secret + "/files")
+            HttpResponse<String> fileResponse = Unirest.post("https://api.primeapi.de/debugs/" + secret + "/files")
                     .header("Authorization", sender.getUniqueId().toString()).field("files", files).asString();
 
             if(s.getStatus() == 200 && fileResponse.getStatus() == 200){
