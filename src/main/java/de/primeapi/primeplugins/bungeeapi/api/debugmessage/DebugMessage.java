@@ -71,7 +71,7 @@ public class DebugMessage {
         String json = gson.toJson(message);
         HttpResponse<String> s = null;
         try {
-            s = Unirest.post("http://mc.primeapi.de:8083/debugs/" + secret)
+            s = Unirest.post("https://api.primeapi.de/debugs/" + secret)
                     .header("Authorization", sender.getUniqueId().toString())
                     .body(json)
                     .asString();

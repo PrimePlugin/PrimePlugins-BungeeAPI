@@ -44,11 +44,12 @@ public class PrimeCoreCommand extends Command {
                     p.thePlayer().sendMessage("§8[§cBungeeAPI§8] §ePluginName §8| §7Aktuelle Version §8| §bNeueste Version ");
                     for (RestPlugin plugin : PrimeCore.getInstance().getRestManager().getPlugins()) {
                         PluginInfo info = plugin.getPluginInfo();
+                        if(info == null) continue;
                         String currVersion = plugin.getPlugin().getDescription().getVersion();
                         if (info.isNeverVersion(currVersion)) {
-                            p.thePlayer().sendMessage("§8[§cBungeeAPI§8] §e" + plugin.getName() + " §8| §7" + currVersion + "§8 | §b" + info.getVersion() + " §c§l✖");
+                            p.thePlayer().sendMessage("§8[§cBungeeAPI§8] §e" + plugin.getName() + " §8| §7" + currVersion + "§8 | §b" + info.getLatest() + " §c§l✖");
                         } else {
-                            p.thePlayer().sendMessage("§8[§cBungeeAPI§8] §e" + plugin.getName() + " §8| §7" + currVersion + "§8 | §b" + info.getVersion() + " §a§l✔");
+                            p.thePlayer().sendMessage("§8[§cBungeeAPI§8] §e" + plugin.getName() + " §8| §7" + currVersion + "§8 | §b" + info.getLatest() + " §a§l✔");
                         }
                     }
                     return;

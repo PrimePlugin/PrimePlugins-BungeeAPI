@@ -11,33 +11,37 @@ import lombok.Setter;
  */
 @Getter @Setter @AllArgsConstructor
 public class PluginInfo {
-    int code;
-    String message;
+
     int id;
     String name;
+    String latest;
     String displayname;
-    String version;
-    String updateMessage;
-    Long updateTime;
 
-    public boolean isNeverVersion(String olderVersion){
-        String[] curr = olderVersion.split("\\.");
-        String[] neww = getVersion().split("\\.");
+    public boolean isNeverVersion(String olderVersion) {
+        String[] curr = olderVersion.split("[._]");
+        String[] neww = getLatest().split("[._]");
         for (int i = 0; i < curr.length; i++) {
-            if(neww.length > i) {
-                int oldI = Integer.parseInt(curr[i]);
-                int newI = Integer.parseInt(neww[i]);
-                if (newI > oldI) {
-                    return true;
-                } else if (newI == oldI) {
-                    continue;
-                } else {
-                    return false;
-                }
+            if (neww.length > i) {
+                try {
+                    int oldI = Integer.parseInt(curr[i]);
+                    int newI = Integer.parseInt(neww[i]);
+                    if (newI > oldI) {
+                        return true;
+                    } else if (newI == oldI) {
+                        continue;
+                    } else {
+                        return false;
+                    }
+                }catch (Exception EX){continue;}
             }
         }
 
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "PluginInfo{" + "id=" + id + ", name='" + name + '\'' + ", latest='" + latest + '\'' + ", displayname" +
+                "='" + displayname + '\'' + '}';
+    }
 }
