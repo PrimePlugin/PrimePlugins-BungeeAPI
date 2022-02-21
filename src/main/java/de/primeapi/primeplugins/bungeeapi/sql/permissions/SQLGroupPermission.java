@@ -47,7 +47,7 @@ public class SQLGroupPermission {
                 perm = new SQLGroupPermission(rs.getInt(1));
             }
             rs.close();
-            st.close();;
+            st.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;

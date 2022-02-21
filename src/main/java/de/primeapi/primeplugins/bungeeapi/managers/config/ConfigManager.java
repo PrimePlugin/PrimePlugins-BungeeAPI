@@ -10,23 +10,22 @@ import java.util.stream.Collectors;
 
 public class ConfigManager {
 
-    private List<Config> registeredConfigs;
+    private final List<Config> registeredConfigs;
 
-    public ConfigManager(){
+    public ConfigManager() {
         registeredConfigs = new ArrayList<>();
         {
             File ord = new File("plugins/primeplugin");
-            if(!ord.exists()) ord.mkdir();
+            if (!ord.exists()) ord.mkdir();
         }
     }
 
-    public List<File> getALLFiles(){
+    public List<File> getALLFiles() {
         return registeredConfigs.stream().map(Config::getFile).collect(Collectors.toList());
     }
 
-    public void register(Config config){
+    public void register(Config config) {
         registeredConfigs.add(config);
         PrimeCore.getInstance().getLogger().log(Level.INFO, "Config '" + config.getName() + "' geladen!");
     }
-
 }

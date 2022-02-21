@@ -1,7 +1,6 @@
 package de.primeapi.primeplugins.bungeeapi.managers.messages;
 
 import de.primeapi.primeplugins.bungeeapi.PrimeCore;
-import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -14,11 +13,11 @@ import java.util.logging.Level;
 public class MessageManager {
 
     private Configuration cfg;
-    private File file;
+    private final File file;
 
-    public MessageManager(){
+    public MessageManager() {
         file = new File("plugins/primeplugin/core/messages.yml");
-        if(!file.exists()) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
@@ -28,8 +27,7 @@ public class MessageManager {
         reload();
     }
 
-
-    public void reload(){
+    public void reload() {
         try {
             cfg = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
         } catch (IOException exception) {

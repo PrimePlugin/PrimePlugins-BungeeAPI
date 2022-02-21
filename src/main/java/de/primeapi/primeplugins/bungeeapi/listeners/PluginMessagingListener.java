@@ -21,14 +21,14 @@ import java.util.concurrent.TimeUnit;
 public class PluginMessagingListener implements Listener {
     List<String> prev = new ArrayList<>();
 
-    private synchronized boolean addCommand(String s){
-        if(prev.contains(s)) return false;
+    private synchronized boolean addCommand(String s) {
+        if (prev.contains(s)) return false;
         prev.add(s);
         return true;
     }
 
     @EventHandler
-    public void onPluginMessage(PluginMessageEvent e){
+    public void onPluginMessage(PluginMessageEvent e) {
         try {
             String tag = e.getTag();
             if (!tag.equalsIgnoreCase("prime:primemessaging")) {
@@ -41,15 +41,15 @@ public class PluginMessagingListener implements Listener {
                 String command = in.readUTF();
 
                 ProxiedPlayer t = ProxyServer.getInstance().getPlayer(name);
-                if(!addCommand(name+command)) return;
+                if (!addCommand(name + command)) return;
                 ProxyServer.getInstance().getScheduler().schedule(PrimeCore.getInstance(), () -> {
-                    prev.remove(name+command);
+                    prev.remove(name + command);
                 }, 3, TimeUnit.SECONDS);
-                if (t != null){
+                if (t != null) {
                     ProxyServer.getInstance().getPluginManager().dispatchCommand(t, command);
                 }
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

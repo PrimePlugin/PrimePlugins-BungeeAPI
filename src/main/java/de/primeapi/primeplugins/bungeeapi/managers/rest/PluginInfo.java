@@ -9,7 +9,9 @@ import lombok.Setter;
  * created on 26.05.2021
  * crated for PrimePlugins
  */
-@Getter @Setter @AllArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
 public class PluginInfo {
 
     int id;
@@ -32,7 +34,9 @@ public class PluginInfo {
                     } else {
                         return false;
                     }
-                }catch (Exception EX){continue;}
+                } catch (Exception EX) {
+                    continue;
+                }
             }
         }
 

@@ -14,7 +14,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 @Getter
 public class RestPlugin {
 
-    private String name;
+    private final String name;
     public Plugin plugin;
     @Setter
     public String license = "";

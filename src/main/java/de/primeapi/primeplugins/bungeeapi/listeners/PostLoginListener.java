@@ -18,7 +18,7 @@ public class PostLoginListener implements Listener {
     private String msg = "";
 
     @EventHandler
-    public void onPostLogin(PostLoginEvent e){
+    public void onPostLogin(PostLoginEvent e) {
         {
             SQLPlayer.create(e.getPlayer().getUniqueId(), e.getPlayer().getName()).submit(player -> {
                 player.updateName(e.getPlayer().getName());
@@ -30,22 +30,21 @@ public class PostLoginListener implements Listener {
         p.setData(PlayerData.IP_ADDRESS, String.valueOf(e.getPlayer().getAddress().getAddress().getHostAddress()));
 
         p.retrieveData(PlayerData.FIRST_LOGIN).submit(s -> {
-            if(s == null){
+            if (s == null) {
                 p.setData(PlayerData.FIRST_LOGIN, String.valueOf(System.currentTimeMillis()));
             }
         });
 
-
-        if(!PrimeCore.getInstance().getRestManager().isChecked()){
+        if (!PrimeCore.getInstance().getRestManager().isChecked()) {
             List<String> updates = new ArrayList<>();
             for (RestPlugin plugin : PrimeCore.getInstance().getRestManager().getPlugins()) {
-                if(plugin.isNewUpdateAvailable()){
+                if (plugin.isNewUpdateAvailable()) {
                     update = true;
                     updates.add(plugin.getName());
                 }
             }
 
-            if(updates.size() >= 1){
+            if (updates.size() >= 1) {
                 update = true;
                 msg = "§8[§c§lCoreAPI§8] §eFür folgende Plugins ist ein update verfügbar: ";
                 for (String s : updates) {
@@ -56,7 +55,7 @@ public class PostLoginListener implements Listener {
             PrimeCore.getInstance().getRestManager().setChecked(true);
         }
 
-        if(update && p.hasPermission("primeplugins.update")){
+        if (update && p.hasPermission("primeplugins.update")) {
             e.getPlayer().sendMessage(msg);
         }
     }

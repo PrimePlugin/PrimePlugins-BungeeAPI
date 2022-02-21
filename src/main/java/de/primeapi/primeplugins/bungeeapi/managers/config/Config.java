@@ -15,14 +15,14 @@ public abstract class Config {
 
 
     private Configuration configuration;
-    private File file;
+    private final File file;
     private final String name;
 
-    public Config(String name, String path, String filename){
+    public Config(String name, String path, String filename) {
         this.name = name;
         file = new File(path, filename);
         file.getParentFile().mkdirs();
-        if(!file.exists()) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException exception) {
@@ -40,7 +40,7 @@ public abstract class Config {
 
     public abstract void loadContent();
 
-    public void reload(){
+    public void reload() {
         try {
             configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
         } catch (IOException exception) {
@@ -49,23 +49,24 @@ public abstract class Config {
     }
 
 
-    public void saveAddEntry(String path, Object object){
-        if(!configuration.contains(path)) {
-            if(object instanceof String){
+    public void saveAddEntry(String path, Object object) {
+        if (!configuration.contains(path)) {
+            if (object instanceof String) {
                 String s = (String) object;
                 s.replaceAll("§", "&");
                 configuration.set(path, s);
-            }else {
+            } else {
                 configuration.set(path, object);
             }
         }
     }
-    public void saveAddEntry(String path, List<String> object){
-        if(!configuration.contains(path)) {
+
+    public void saveAddEntry(String path, List<String> object) {
+        if (!configuration.contains(path)) {
             List<String> list = new ArrayList<>();
             for (String s :
                     object) {
-                list.add(s.replaceAll("§","&"));
+                list.add(s.replaceAll("§", "&"));
             }
             configuration.set(path, list);
         }
@@ -80,19 +81,23 @@ public abstract class Config {
     }
 
 
-    public String getString(String path){
+    public String getString(String path) {
         return configuration.getString(path);
     }
-    public Boolean getBoolean(String path){
+
+    public Boolean getBoolean(String path) {
         return configuration.getBoolean(path);
     }
-    public Integer getInt(String path){
+
+    public Integer getInt(String path) {
         return configuration.getInt(path);
     }
-    public List<String> getStringList(String path){
+
+    public List<String> getStringList(String path) {
         return configuration.getStringList(path);
     }
-    public List<Integer> getIntegerList(String path){
+
+    public List<Integer> getIntegerList(String path) {
         return configuration.getIntList(path);
     }
 }

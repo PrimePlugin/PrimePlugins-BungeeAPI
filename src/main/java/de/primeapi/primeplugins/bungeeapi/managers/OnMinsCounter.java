@@ -11,13 +11,13 @@ public class OnMinsCounter implements Runnable {
     public void run() {
         ProxyServer.getInstance().getPlayers().forEach(proxiedPlayer -> {
             PrimePlayer p = new PrimePlayer(proxiedPlayer);
-            if(BungeeAPI.getInstance().isOnline()) {
+            if (BungeeAPI.getInstance().isOnline()) {
                 OnlineStats.getAFK(p.getUniqueId()).submit(aBoolean -> {
                     if (!aBoolean) {
                         p.retrieveOnMins().submit(integer -> p.setOnMins(integer + 1));
                     }
                 });
-            }else {
+            } else {
                 p.retrieveOnMins().submit(integer -> p.setOnMins(integer + 1));
             }
         });

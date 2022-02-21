@@ -3,7 +3,6 @@ package de.primeapi.primeplugins.bungeeapi.managers.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mashape.unirest.http.Unirest;
 import de.primeapi.primeplugins.bungeeapi.PrimeCore;
@@ -12,14 +11,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 
@@ -52,13 +53,13 @@ public class RestManager {
                 plugins.add(element.getAsJsonArray().get(i));
             }
             return plugins.stream()
-                          .map(jsonElement -> gson.fromJson(jsonElement, PluginInfo.class))
-                          .filter(pluginInfo -> pluginInfo.getName()
-                                                          .equalsIgnoreCase(plugin) || pluginInfo.getDisplayname()
-                                                                                                 .equalsIgnoreCase(
-                                                                                                         plugin))
-                          .findAny()
-                          .orElse(null);
+                    .map(jsonElement -> gson.fromJson(jsonElement, PluginInfo.class))
+                    .filter(pluginInfo -> pluginInfo.getName()
+                            .equalsIgnoreCase(plugin) || pluginInfo.getDisplayname()
+                            .equalsIgnoreCase(
+                                    plugin))
+                    .findAny()
+                    .orElse(null);
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("Info-Anfrage für " + plugin + " fehlgeschlagen: " + ex.getMessage());

@@ -17,10 +17,10 @@ public class CommandsManager {
 
     public ArrayList<Command> registeredCommands = new ArrayList<>();
 
-    public CommandsManager(){
+    public CommandsManager() {
         File file = new File("plugins/primeplugin/core", "commands.yml");
         file.getParentFile().mkdirs();
-        if(!file.exists()) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
@@ -38,38 +38,34 @@ public class CommandsManager {
         String deactive = "";
         int deactiveCount = 0;
 
-        for(Command c : Command.values()){
+        for (Command c : Command.values()) {
             boolean b;
 
-            if(cfg.contains("commands." + c.getName())) {
+            if (cfg.contains("commands." + c.getName())) {
                 b = cfg.getBoolean("commands." + c.getName());
-            }else{
+            } else {
                 b = true;
                 PrimeCore.getInstance().getLogger().log(Level.INFO, "Command '" + c.getName() + "' wurde eingetragen!");
                 cfg.set("commands." + c.getName(), true);
             }
 
-            if(b){
+            if (b) {
                 ProxyServer.getInstance().getPluginManager().registerCommand(PrimeCore.getInstance(), c.getCommand());
                 registeredCommands.add(c);
                 active += c.getName() + ", ";
                 activeCount++;
-            }else {
+            } else {
                 deactive += c.getName() + ", ";
                 deactiveCount++;
             }
         }
         PrimeCore.getInstance().getLogger().log(Level.INFO, "Aktivierte Commands (" + activeCount + "): " + active);
         PrimeCore.getInstance().getLogger().log(Level.INFO, "Deaktivierte Commands (" + deactiveCount + "): " + deactive);
-
-
         try {
             ConfigurationProvider.getProvider(YamlConfiguration.class).save(cfg, file);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
 }
