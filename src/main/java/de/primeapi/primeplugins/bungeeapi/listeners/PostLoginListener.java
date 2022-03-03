@@ -38,9 +38,11 @@ public class PostLoginListener implements Listener {
         if (!PrimeCore.getInstance().getRestManager().isChecked()) {
             List<String> updates = new ArrayList<>();
             for (RestPlugin plugin : PrimeCore.getInstance().getRestManager().getPlugins()) {
-                if (plugin.isNewUpdateAvailable()) {
-                    update = true;
-                    updates.add(plugin.getName());
+                if(plugin != null){
+                    if (plugin.isNewUpdateAvailable()) {
+                        update = true;
+                        updates.add(plugin.getName());
+                    }
                 }
             }
 

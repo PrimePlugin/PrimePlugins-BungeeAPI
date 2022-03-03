@@ -31,10 +31,14 @@ public class RestPlugin {
                     .getInstance()
                     .getRestManager()
                     .getPlugininfo(name);
-            return pluginInfo
-                    .isNeverVersion(
-                            plugin.getDescription().getVersion()
-                                   );
+            if(pluginInfo != null) {
+                return pluginInfo
+                        .isNeverVersion(
+                                plugin.getDescription().getVersion()
+                        );
+            } else {
+                return false;
+            }
         }catch (Exception ex){
             ex.printStackTrace();
         }
