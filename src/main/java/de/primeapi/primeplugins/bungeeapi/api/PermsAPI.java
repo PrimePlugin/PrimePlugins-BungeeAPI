@@ -6,6 +6,7 @@ import de.primeapi.primeplugins.bungeeapi.sql.permissions.SQLGroup;
 import de.primeapi.primeplugins.bungeeapi.sql.permissions.SQLGroupPermission;
 import de.primeapi.primeplugins.bungeeapi.sql.permissions.SQLRanking;
 import de.primeapi.primeplugins.bungeeapi.sql.permissions.SQLUserPermission;
+import de.primeapi.util.sql.queries.Retriever;
 import lombok.NonNull;
 
 import java.sql.DatabaseMetaData;
@@ -182,8 +183,11 @@ public class PermsAPI {
      * @param uuid The UUID of the Player
      * @return A {@link DatabaseTask} of a List containing all {@link SQLGroup SQLGroups}
      */
-    public DatabaseTask<List<SQLGroup>> getGroups(UUID uuid) {
-        return SQLRanking.fromUser(uuid).map(sqlRankings -> sqlRankings.stream().map(sqlRanking -> sqlRanking.getGroup().complete()).collect(Collectors.toList()));
+    public Retriever<List<SQLGroup>> getGroups(UUID uuid) {
+        return SQLRanking.fromUser(uuid)
+                         .map(sqlRankings -> sqlRankings.stream()
+                                                        .map(sqlRanking -> sqlRanking.getGroup().complete())
+                                                        .collect(Collectors.toList()));
     }
 
     public DatabaseTask<Boolean> hasSelfPermission(UUID uuid, String permission) {

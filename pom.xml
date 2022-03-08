@@ -63,6 +63,11 @@
             <name>m2-dv8tion</name>
             <url>https://m2.dv8tion.net/releases</url>
         </repository>
+
+        <repository>
+            <id>PrimeAPI</id>
+            <url>https://repo.primeapi.de</url>
+        </repository>
     </repositories>
 
 
@@ -77,11 +82,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.18</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.davidmoten</groupId>
-            <artifactId>rxjava-jdbc</artifactId>
-            <version>0.7.11</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.davidmoten</groupId>-->
+        <!--            <artifactId>rxjava-jdbc</artifactId>-->
+        <!--            <version>0.7.11</version>-->
+        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
@@ -119,6 +124,13 @@
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.primeapi.util.sql</groupId>
+            <artifactId>SQLAdapter</artifactId>
+            <version>LATEST</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

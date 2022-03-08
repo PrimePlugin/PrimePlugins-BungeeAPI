@@ -1,10 +1,8 @@
 package de.primeapi.primeplugins.bungeeapi.sql.utils;
 
 import de.primeapi.primeplugins.bungeeapi.PrimeCore;
-import de.primeapi.primeplugins.bungeeapi.sql.DatabaseTask;
+import de.primeapi.util.sql.queries.Retriever;
 import lombok.AllArgsConstructor;
-
-import java.util.concurrent.CompletableFuture;
 
 @AllArgsConstructor
 public enum SQLSetting {
@@ -17,46 +15,50 @@ public enum SQLSetting {
     ;
     String standardValue;
 
-    public DatabaseTask<String> getValue(){
-        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
-            String s = PrimeCore.getInstance().getDatabase().select(
-                    "SELECT value FROM prime_bungee_settings WHERE identifier = ?"
-            ).parameters(this.toString()).getAs(String.class)
-                    .toBlocking().singleOrDefault(null);
-            if(s == null) return standardValue;
-            else return s;
-        }));
+    public Retriever<String> getValue() {
+        return PrimeCore.getInstance().getDatabase().select(
+                                "SELECT value FROM prime_bungee_settings WHERE identifier = ?"
+                                                           ).parameters(this.toString())
+                        .execute(String.class)
+                        .get()
+                        .map(s -> s == null ? standardValue : s);
     }
 
-    public void setValue(String value){
+    public void setValue(String value) {
         PrimeCore.getInstance().getThreadPoolExecutor().submit(() -> {
-            String s = PrimeCore.getInstance().getDatabase().select(
-                    "SELECT value FROM prime_bungee_settings WHERE identifier = ?"
-            ).parameters(this.toString()).getAs(String.class)
-                    .toBlocking().singleOrDefault(null);
-            if(s == null){
+            String s = PrimeCore.getInstance()
+                                .getDatabase()
+                                .select(
+                                        "SELECT value FROM prime_bungee_settings WHERE identifier = ?"
+                                       )
+                                .parameters(this.toString())
+                                .execute(String.class)
+                                .get()
+                                .complete();
+            if (s == null) {
                 PrimeCore.getInstance().getDatabase().update(
                         "INSERT INTO prime_bungee_settings VALUES (id,?,?)"
-                ).parameters(this.toString(), value).execute();
-            }else {
+                                                            ).parameters(this.toString(), value).execute();
+            } else {
                 PrimeCore.getInstance().getDatabase().update(
                         "UPDATE prime_bungee_settings SET value = ? WHERE identifier = ?"
-                ).parameters(value, this.toString()).execute();
+                                                            ).parameters(value, this.toString()).execute();
             }
         });
     }
 
-    public DatabaseTask<Boolean> getAsBoolean(){
-        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
+    public Retriever<Boolean> getAsBoolean() {
+        return new Retriever<>(() -> {
             String value = getValue().complete();
             return Boolean.valueOf(value);
-        }));
+        });
     }
-    public DatabaseTask<Integer> getAsInteger(){
-        return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
+
+    public Retriever<Integer> getAsInteger() {
+        return new Retriever<>(() -> {
             String value = getValue().complete();
             return Integer.parseInt(value);
-        }));
+        });
     }
 
 }

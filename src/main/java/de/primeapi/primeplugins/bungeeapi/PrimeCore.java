@@ -1,6 +1,5 @@
 package de.primeapi.primeplugins.bungeeapi;
 
-import com.github.davidmoten.rx.jdbc.Database;
 import de.primeapi.primeplugins.bungeeapi.api.BungeeAPI;
 import de.primeapi.primeplugins.bungeeapi.api.PermsAPI;
 import de.primeapi.primeplugins.bungeeapi.commands.PayCommand;
@@ -17,6 +16,7 @@ import de.primeapi.primeplugins.bungeeapi.managers.rest.RestManager;
 import de.primeapi.primeplugins.bungeeapi.websocket.SocketProvider;
 import de.primeapi.primeplugins.bungeeapi.websocket.commands.KickWebsocketCommand;
 import de.primeapi.primeplugins.bungeeapi.websocket.commands.SudoWebsocketCommand;
+import de.primeapi.util.sql.Database;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -130,8 +130,12 @@ public class PrimeCore extends Plugin {
                 connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_web_keys` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE, `player` VARCHAR(36) NOT NULL UNIQUE, `key` VARCHAR(8) NOT NULL, `rank` INT NOT NULL, primary key (`id`))").execute();
                 connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_web_accounts` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE, `player` VARCHAR(36) NOT NULL UNIQUE, `password` VARCHAR(255) NOT NULL, `rank` INT NOT NULL, primary key (`id`))").execute();
                 connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_web_unban` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE, `player` VARCHAR(36) NOT NULL UNIQUE, `type` VARCHAR(64) NOT NULL, `reason` VARCHAR(64) NOT NULL, `lenght` VARCHAR(64) NOT NULL, `message` VARCHAR(1000) NOT NULL, primary key (`id`))").execute();
-                connection.prepareStatement("CREATE TABLE IF NOT EXISTS `core_playerdata` (`id` INT NOT NULL AUTO_INCREMENT UNIQUE, `uuid` VARCHAR(36) NOT NULL, `type` VARCHAR(32) NOT NULL, `value` VARCHAR(64), primary key (`id`))").execute();
-                database = Database.from(connection).asynchronous();
+                connection.prepareStatement(
+                                  "CREATE TABLE IF NOT EXISTS `core_playerdata` (`id` INT NOT NULL AUTO_INCREMENT " +
+		                                  "UNIQUE, `uuid` VARCHAR(36) NOT NULL, `type` VARCHAR(32) NOT NULL, `value` " +
+		                                  "VARCHAR(64), primary key (`id`))")
+                          .execute();
+                database = new Database(connection);
                 getLogger().log(Level.INFO, "Asynchronous MySQL-Connection established");
             } catch (SQLException throwables) {
                 getLogger().log(Level.WARNING, "MySQL-Connection failed: " + throwables.getMessage());

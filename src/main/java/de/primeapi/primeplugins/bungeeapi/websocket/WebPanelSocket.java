@@ -4,12 +4,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.primeapi.primeplugins.bungeeapi.PrimeCore;
-import de.primeapi.primeplugins.bungeeapi.configs.CoreConfig;
-import org.eclipse.jetty.websocket.api.*;
-import org.eclipse.jetty.websocket.api.annotations.*;
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+
+import java.io.IOException;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
 /**
@@ -43,8 +46,13 @@ public class WebPanelSocket {
             if(command != null){
                 String authUUID = object.get("auth").getAsJsonObject().get("uuid").getAsString();
                 String authKey = object.get("auth").getAsJsonObject().get("key").getAsString();
-                String hash = PrimeCore.getInstance().getDatabase().select("SELECT password FROM core_web_accounts WHERE player = ?")
-                        .parameters(authUUID).getAs(String.class).toBlocking().singleOrDefault(null);
+                String hash = PrimeCore.getInstance()
+                                       .getDatabase()
+                                       .select("SELECT password FROM core_web_accounts WHERE player = ?")
+                                       .parameters(authUUID)
+                                       .execute(String.class)
+                                       .get()
+                                       .complete();
                 if(hash == null || authUUID == null){
                     return;
                 }
