@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Getter @AllArgsConstructor
+@Getter @AllArgsConstructor @Deprecated
 public class DatabaseTask<T> {
 
     private final CompletableFuture<T> future;
