@@ -16,20 +16,23 @@ import java.util.UUID;
  * crated for PrimePlugins
  */
 public class KickWebsocketCommand extends SocketCommand {
-    public KickWebsocketCommand() {
-        super("kick");
-    }
+	public KickWebsocketCommand() {
+		super("kick");
+	}
 
-    @Override
-    public void execute(Session sender, JsonObject data) {
-        try {
-            String playerUUID = data.get("player").getAsString();
-            ProxiedPlayer p = ProxyServer.getInstance().getPlayer(UUID.fromString(playerUUID));
-            if(p == null) return;
-            SQLPlayer issuer = new SQLPlayer(UUID.fromString(data.get("auth").getAsJsonObject().get("uuid").getAsString()));
-            p.disconnect(CoreMessage.KICK_WEB.replace("name", issuer.retrieveRealName().complete().replace("<br>", "\n")).getContent());
-        }catch (Exception ex) {
+	@Override
+	public void execute(Session sender, JsonObject data) {
+		try {
+			String playerUUID = data.get("player").getAsString();
+			ProxiedPlayer p = ProxyServer.getInstance().getPlayer(UUID.fromString(playerUUID));
+			if (p == null) return;
+			SQLPlayer issuer = new SQLPlayer(
+					UUID.fromString(data.get("auth").getAsJsonObject().get("uuid").getAsString()));
+			p.disconnect(
+					CoreMessage.KICK_WEB.replace("name", issuer.retrieveRealName().complete().replace("<br>", "\n"))
+					                    .getContent());
+		} catch (Exception ex) {
 
-        }
-    }
+		}
+	}
 }

@@ -12,36 +12,37 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor @Getter @Setter
+@AllArgsConstructor
+@Getter
+@Setter
 public class PrimePluginInfo {
-    static {
-        registeredPlugins = new ArrayList<>();
-        registerPlugin(
-                CompletableFuture.supplyAsync(() -> {
-                    String name = "SpigotCore";
-                    String version = PrimeCore.getInstance().getDescription().getVersion();
-                    HashMap<String, Object> properties = new HashMap<>();
-                    properties.put("Webinterface-Link", CoreConfig.getInstance().getString("webinterface.link"));
-                    properties.put("Websocket Port", CoreConfig.getInstance().getInt("webinterface.websocket.port"));
-                    return new PrimePluginInfo(name, null, version, properties);
-                })
-        );
-    }
+	private static ArrayList<CompletableFuture<PrimePluginInfo>> registeredPlugins;
 
-    private static ArrayList<CompletableFuture<PrimePluginInfo>> registeredPlugins;
+	static {
+		registeredPlugins = new ArrayList<>();
+		registerPlugin(
+				CompletableFuture.supplyAsync(() -> {
+					String name = "SpigotCore";
+					String version = PrimeCore.getInstance().getDescription().getVersion();
+					HashMap<String, Object> properties = new HashMap<>();
+					properties.put("Webinterface-Link", CoreConfig.getInstance().getString("webinterface.link"));
+					properties.put("Websocket Port", CoreConfig.getInstance().getInt("webinterface.websocket.port"));
+					return new PrimePluginInfo(name, null, version, properties);
+				})
+		              );
+	}
 
-    public static void registerPlugin(CompletableFuture<PrimePluginInfo> plugin){
-        registeredPlugins.add(plugin);
-    }
+	String name;
+	String license;
+	String version;
+	HashMap<String, Object> properties;
 
-    public static List<PrimePluginInfo> getPlugins(){
-        return registeredPlugins.stream().map(CompletableFuture::join).collect(Collectors.toList());
-    }
+	public static void registerPlugin(CompletableFuture<PrimePluginInfo> plugin) {
+		registeredPlugins.add(plugin);
+	}
 
-
-    String name;
-    String license;
-    String version;
-    HashMap<String, Object> properties;
+	public static List<PrimePluginInfo> getPlugins() {
+		return registeredPlugins.stream().map(CompletableFuture::join).collect(Collectors.toList());
+	}
 
 }

@@ -15,23 +15,23 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PlayerParty {
 
-    UUID owner;
+	UUID owner;
 
-    public Retriever<List<SQLPlayer>> getPlayers(boolean inludeOwner) {
-        return PrimeCore.getInstance().getDatabase().select(
-                                "SELECT uuid FROM prime_bungee_online WHERE party = ?"
-                                                           ).parameters(owner.toString())
-                        .execute(String.class)
-                        .getAsSet()
-                        .map(strings -> strings.stream().map(s -> new SQLPlayer(UUID.fromString(s))).collect(
-                                Collectors.toList()));
-    }
+	public Retriever<List<SQLPlayer>> getPlayers(boolean inludeOwner) {
+		return PrimeCore.getInstance().getDatabase().select(
+				                "SELECT uuid FROM prime_bungee_online WHERE party = ?"
+		                                                   ).parameters(owner.toString())
+		                .execute(String.class)
+		                .getAsSet()
+		                .map(strings -> strings.stream().map(s -> new SQLPlayer(UUID.fromString(s))).collect(
+				                Collectors.toList()));
+	}
 
-    public void setOwner(UUID uuid) {
-        getPlayers(true).submit(list -> list.forEach(
-                primePlayer -> OnlineStats.setParty(primePlayer.retrieveUniqueId().complete(), uuid)));
-        owner = uuid;
-    }
+	public void setOwner(UUID uuid) {
+		getPlayers(true).submit(list -> list.forEach(
+				primePlayer -> OnlineStats.setParty(primePlayer.retrieveUniqueId().complete(), uuid)));
+		owner = uuid;
+	}
 
 
 }

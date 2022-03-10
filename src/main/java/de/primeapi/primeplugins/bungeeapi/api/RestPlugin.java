@@ -14,44 +14,44 @@ import net.md_5.bungee.api.plugin.Plugin;
 @Getter
 public class RestPlugin {
 
-    private final String name;
-    public Plugin plugin;
-    @Setter
-    public String license = "";
+	private final String name;
+	public Plugin plugin;
+	@Setter
+	public String license = "";
 
-    public RestPlugin(String name, Plugin plugin) {
-        this.name = name;
-        this.plugin = plugin;
-        PrimeCore.getInstance().getRestManager().registerPlugin(this);
-    }
+	public RestPlugin(String name, Plugin plugin) {
+		this.name = name;
+		this.plugin = plugin;
+		PrimeCore.getInstance().getRestManager().registerPlugin(this);
+	}
 
-    public boolean isNewUpdateAvailable(){
-        try {
-            PluginInfo pluginInfo = PrimeCore
-                    .getInstance()
-                    .getRestManager()
-                    .getPlugininfo(name);
-            if(pluginInfo != null) {
-                return pluginInfo
-                        .isNeverVersion(
-                                plugin.getDescription().getVersion()
-                        );
-            } else {
-                return false;
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-        return false;
-    }
+	public boolean isNewUpdateAvailable() {
+		try {
+			PluginInfo pluginInfo = PrimeCore
+					.getInstance()
+					.getRestManager()
+					.getPlugininfo(name);
+			if (pluginInfo != null) {
+				return pluginInfo
+						.isNeverVersion(
+								plugin.getDescription().getVersion()
+						               );
+			} else {
+				return false;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
 
-    public void downloadLatestVersion(String path){
-        PrimeCore.getInstance().getRestManager().downloadPlugin(getPluginInfo(), license, path);
-    }
+	public void downloadLatestVersion(String path) {
+		PrimeCore.getInstance().getRestManager().downloadPlugin(getPluginInfo(), license, path);
+	}
 
-    public PluginInfo getPluginInfo(){
-        return PrimeCore.getInstance().getRestManager().getPlugininfo(name);
-    }
+	public PluginInfo getPluginInfo() {
+		return PrimeCore.getInstance().getRestManager().getPlugininfo(name);
+	}
 
 
 }

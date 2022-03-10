@@ -6,15 +6,15 @@ import lombok.Getter;
 
 @Getter
 public enum Command {
-    COINS("coins", new CoinsCommand("coins")),
-    WEBACCOUNT("webaccount", new WebAccountCommand("webaccount")),
-    ;
+	COINS("coins", new CoinsCommand("coins")),
+	WEBACCOUNT("webaccount", new WebAccountCommand("webaccount")),
+	;
 
-    String name;
-    net.md_5.bungee.api.plugin.Command command;
+	String name;
+	net.md_5.bungee.api.plugin.Command command;
 
-    Command(String name, net.md_5.bungee.api.plugin.Command command) {
-        this.name = name;
-        this.command = command;
-    }
+	Command(String name, net.md_5.bungee.api.plugin.Command command) {
+		this.name = name;
+		this.command = command;
+	}
 }

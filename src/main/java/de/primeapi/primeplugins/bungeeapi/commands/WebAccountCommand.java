@@ -18,38 +18,38 @@ import net.md_5.bungee.api.plugin.Command;
  */
 public class WebAccountCommand extends Command {
 
-    public WebAccountCommand(String name) {
-        super(name);
-    }
+	public WebAccountCommand(String name) {
+		super(name);
+	}
 
-    @Override
-    public void execute(CommandSender commandSender, String[] args) {
-        if(!(commandSender instanceof ProxiedPlayer)) {
-            return;
-        }
-        PrimePlayer p = new PrimePlayer((ProxiedPlayer) commandSender);
-        WebKey.fromPlayer(p).submit(oldKey -> {
-            if(oldKey != null) oldKey.delete();
-            int rank;
-            if(p.hasPermission("bungee.webadmin")){
-                rank = 100;
-            }else {
-                rank = 0;
-            }
-            WebKey webKey = WebKey.createRandom(p, rank).complete();
-            if(webKey == null){
-                p.sendMessage(CoreMessage.WEBACCOUNT_ERROR);
-                return;
-            }
-            TextComponent component = new TextComponent(
-                    CoreMessage.WEBACCOUNT_SUCCESS
-                            .replace("key", webKey.getKey().complete())
-                    .getContent()
-            );
-            String url = CoreConfig.getInstance().getString("webinterface.link");
-            url += "?key=" + webKey.getKey().complete();
-            component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-            p.thePlayer().sendMessage(component);
-        });
-    }
+	@Override
+	public void execute(CommandSender commandSender, String[] args) {
+		if (!(commandSender instanceof ProxiedPlayer)) {
+			return;
+		}
+		PrimePlayer p = new PrimePlayer((ProxiedPlayer) commandSender);
+		WebKey.fromPlayer(p).submit(oldKey -> {
+			if (oldKey != null) oldKey.delete();
+			int rank;
+			if (p.hasPermission("bungee.webadmin")) {
+				rank = 100;
+			} else {
+				rank = 0;
+			}
+			WebKey webKey = WebKey.createRandom(p, rank).complete();
+			if (webKey == null) {
+				p.sendMessage(CoreMessage.WEBACCOUNT_ERROR);
+				return;
+			}
+			TextComponent component = new TextComponent(
+					CoreMessage.WEBACCOUNT_SUCCESS
+							.replace("key", webKey.getKey().complete())
+							.getContent()
+			);
+			String url = CoreConfig.getInstance().getString("webinterface.link");
+			url += "?key=" + webKey.getKey().complete();
+			component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+			p.thePlayer().sendMessage(component);
+		});
+	}
 }

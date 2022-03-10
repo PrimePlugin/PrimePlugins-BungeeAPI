@@ -19,39 +19,39 @@ import java.util.concurrent.TimeUnit;
  * crated for PrimePlugins
  */
 public class PluginMessagingListener implements Listener {
-    List<String> prev = new ArrayList<>();
+	List<String> prev = new ArrayList<>();
 
-    private synchronized boolean addCommand(String s) {
-        if (prev.contains(s)) return false;
-        prev.add(s);
-        return true;
-    }
+	private synchronized boolean addCommand(String s) {
+		if (prev.contains(s)) return false;
+		prev.add(s);
+		return true;
+	}
 
-    @EventHandler
-    public void onPluginMessage(PluginMessageEvent e) {
-        try {
-            String tag = e.getTag();
-            if (!tag.equalsIgnoreCase("prime:primemessaging")) {
-                return;
-            }
-            ByteArrayDataInput in = ByteStreams.newDataInput(e.getData());
-            String subChannel = in.readUTF();
-            if (subChannel.equalsIgnoreCase("sudoPlayer")) {
-                String name = in.readUTF();
-                String command = in.readUTF();
+	@EventHandler
+	public void onPluginMessage(PluginMessageEvent e) {
+		try {
+			String tag = e.getTag();
+			if (!tag.equalsIgnoreCase("prime:primemessaging")) {
+				return;
+			}
+			ByteArrayDataInput in = ByteStreams.newDataInput(e.getData());
+			String subChannel = in.readUTF();
+			if (subChannel.equalsIgnoreCase("sudoPlayer")) {
+				String name = in.readUTF();
+				String command = in.readUTF();
 
-                ProxiedPlayer t = ProxyServer.getInstance().getPlayer(name);
-                if (!addCommand(name + command)) return;
-                ProxyServer.getInstance().getScheduler().schedule(PrimeCore.getInstance(), () -> {
-                    prev.remove(name + command);
-                }, 3, TimeUnit.SECONDS);
-                if (t != null) {
-                    ProxyServer.getInstance().getPluginManager().dispatchCommand(t, command);
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+				ProxiedPlayer t = ProxyServer.getInstance().getPlayer(name);
+				if (!addCommand(name + command)) return;
+				ProxyServer.getInstance().getScheduler().schedule(PrimeCore.getInstance(), () -> {
+					prev.remove(name + command);
+				}, 3, TimeUnit.SECONDS);
+				if (t != null) {
+					ProxyServer.getInstance().getPluginManager().dispatchCommand(t, command);
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
 }

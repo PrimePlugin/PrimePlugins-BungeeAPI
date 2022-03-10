@@ -14,20 +14,20 @@ import java.util.UUID;
  * crated for PrimePlugins
  */
 public class SudoWebsocketCommand extends SocketCommand {
-    public SudoWebsocketCommand() {
-        super("sudo");
-    }
+	public SudoWebsocketCommand() {
+		super("sudo");
+	}
 
-    @Override
-    public void execute(Session sender, JsonObject data) {
-        try {
-        String playerUUID = data.get("player").getAsString();
-        String command = data.get("message").getAsString();
-        ProxiedPlayer p = ProxyServer.getInstance().getPlayer(UUID.fromString(playerUUID));
-        if(p == null) return;
-        ProxyServer.getInstance().getPluginManager().dispatchCommand(p, command);
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+	@Override
+	public void execute(Session sender, JsonObject data) {
+		try {
+			String playerUUID = data.get("player").getAsString();
+			String command = data.get("message").getAsString();
+			ProxiedPlayer p = ProxyServer.getInstance().getPlayer(UUID.fromString(playerUUID));
+			if (p == null) return;
+			ProxyServer.getInstance().getPluginManager().dispatchCommand(p, command);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

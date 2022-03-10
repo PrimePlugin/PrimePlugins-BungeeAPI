@@ -9,8 +9,10 @@ import lombok.Setter;
  * created on 27.05.2021
  * crated for PrimePlugins
  */
-@Getter @Setter @AllArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
 public class CashedItem<V> {
-    V value;
-    Long timeout;
+	V value;
+	Long timeout;
 }

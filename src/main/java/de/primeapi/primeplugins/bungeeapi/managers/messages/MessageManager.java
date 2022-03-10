@@ -12,46 +12,53 @@ import java.util.logging.Level;
 
 public class MessageManager {
 
-    private Configuration cfg;
-    private final File file;
+	private final File file;
+	private Configuration cfg;
 
-    public MessageManager() {
-        file = new File("plugins/primeplugin/core/messages.yml");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        reload();
-    }
+	public MessageManager() {
+		file = new File("plugins/primeplugin/core/messages.yml");
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		reload();
+	}
 
-    public void reload() {
-        try {
-            cfg = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        PrimeCore.getInstance().getThreadPoolExecutor().submit(() -> {
-            int i = 0;
-            for (CoreMessage message : CoreMessage.values()) {
-                if (cfg.contains(message.getPath())) {
-                    message.setContent(ChatColor.translateAlternateColorCodes('&', cfg.getString(message.getPath())).replaceAll("%prefix%", CoreMessage.PREFIX.getContent()).replaceAll("<br>", "\n"));
-                } else {
-                    String s = (message.getPrefix() ? "%prefix%" : "") + message.getContent().replaceAll("§", "&");
-                    cfg.set(message.getPath(), s);
-                    i++;
-                    message.setContent(ChatColor.translateAlternateColorCodes('&', s.replaceAll("%prefix%", CoreMessage.PREFIX.getContent())));
-                }
-            }
-            PrimeCore.getInstance().getLogger().log(Level.INFO, "Es wurde(n) " + i + " neue Nachricht(en) in die messages.yml eingefügt!");
-            try {
-                ConfigurationProvider.getProvider(YamlConfiguration.class).save(cfg, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
+	public void reload() {
+		try {
+			cfg = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
+		PrimeCore.getInstance().getThreadPoolExecutor().submit(() -> {
+			int i = 0;
+			for (CoreMessage message : CoreMessage.values()) {
+				if (cfg.contains(message.getPath())) {
+					message.setContent(ChatColor.translateAlternateColorCodes('&', cfg.getString(message.getPath()))
+					                            .replaceAll("%prefix%", CoreMessage.PREFIX.getContent())
+					                            .replaceAll("<br>", "\n"));
+				} else {
+					String s = (message.getPrefix() ? "%prefix%" : "") + message.getContent().replaceAll("§", "&");
+					cfg.set(message.getPath(), s);
+					i++;
+					message.setContent(ChatColor.translateAlternateColorCodes('&', s.replaceAll(
+							"%prefix%",
+							CoreMessage.PREFIX.getContent()
+					                                                                           )));
+				}
+			}
+			PrimeCore.getInstance()
+			         .getLogger()
+			         .log(Level.INFO, "Es wurde(n) " + i + " neue Nachricht(en) in die messages.yml eingefügt!");
+			try {
+				ConfigurationProvider.getProvider(YamlConfiguration.class).save(cfg, file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
 
 }
