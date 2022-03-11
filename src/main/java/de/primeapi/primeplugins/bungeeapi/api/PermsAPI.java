@@ -1,6 +1,7 @@
 package de.primeapi.primeplugins.bungeeapi.api;
 
 import de.primeapi.primeplugins.bungeeapi.PrimeCore;
+import de.primeapi.primeplugins.bungeeapi.listeners.PermissionCheckListener;
 import de.primeapi.primeplugins.bungeeapi.sql.DatabaseTask;
 import de.primeapi.primeplugins.bungeeapi.sql.permissions.SQLGroup;
 import de.primeapi.primeplugins.bungeeapi.sql.permissions.SQLGroupPermission;
@@ -8,6 +9,7 @@ import de.primeapi.primeplugins.bungeeapi.sql.permissions.SQLRanking;
 import de.primeapi.primeplugins.bungeeapi.sql.permissions.SQLUserPermission;
 import de.primeapi.util.sql.queries.Retriever;
 import lombok.NonNull;
+import net.md_5.bungee.api.ProxyServer;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -42,6 +44,8 @@ public class PermsAPI {
 		}
 		if (online) {
 			PrimeCore.getInstance().getLogger().log(Level.INFO, " PermsAPI wurde geladen");
+			ProxyServer.getInstance().getPluginManager().registerListener(PrimeCore.getInstance(), new PermissionCheckListener());
+			PrimeCore.getInstance().getLogger().log(Level.INFO, " Permissions-Abfrage aktiviert!");
 		} else {
 			PrimeCore.getInstance().getLogger().log(Level.INFO, " PermsAPI wurde NICHT geladen");
 		}
@@ -55,20 +59,20 @@ public class PermsAPI {
 		return online;
 	}
 
-	public DatabaseTask<SQLGroup> getHighestGroup(UUID uuid) {
+	public Retriever<SQLGroup> getHighestGroup(UUID uuid) {
 		if (!online) throw new IllegalStateException("PermsAPI was not loaded");
-		return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
+		return new Retriever<>(() -> {
 			List<SQLRanking> list = SQLRanking.fromUser(uuid).complete();
 			if (list.size() == 0) {
 				return SQLGroup.fromName("default").complete();
 			}
 			return list.get(0).getGroup().complete();
-		}));
+		});
 	}
 
-	public DatabaseTask<List<String>> getPermissions(UUID uuid) {
+	public Retriever<List<String>> getPermissions(UUID uuid) {
 		if (!online) throw new IllegalStateException("PermsAPI was not loaded");
-		return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
+		return new Retriever<>(() -> {
 			SQLGroup defaultGroup = SQLGroup.fromName("default").complete();
 			List<String> list;
 			if (defaultGroup == null) {
@@ -90,7 +94,7 @@ public class PermsAPI {
 				}
 			}
 			return list;
-		}));
+		});
 	}
 
 	/**
@@ -191,9 +195,9 @@ public class PermsAPI {
 		                                                .collect(Collectors.toList()));
 	}
 
-	public DatabaseTask<Boolean> hasSelfPermission(UUID uuid, String permission) {
+	public Retriever<Boolean> hasSelfPermission(UUID uuid, String permission) {
 		if (!online) throw new IllegalStateException("PermsAPI was not loaded");
-		return new DatabaseTask<>(CompletableFuture.supplyAsync(() -> {
+		return new Retriever<>(() -> {
 			List<String> list = getPermissions(uuid).complete();
 			if (list.contains("*")) {
 				return true;
@@ -219,7 +223,7 @@ public class PermsAPI {
 
 
 			return false;
-		}));
+		});
 	}
 
 }
